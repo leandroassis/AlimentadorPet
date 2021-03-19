@@ -21,7 +21,7 @@ void loop() {
   int segundos = now.second();
   
   AjustaRelogio();
-  if(hora==0 && minutos==29 && segundos==15){
+  if(hora==17 && minutos==43 && segundos==10){
     for(int i=0; i<3; i++){
       digitalWrite(LED, HIGH);
       delay(2000);
