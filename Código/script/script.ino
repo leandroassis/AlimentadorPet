@@ -27,11 +27,13 @@ RTC_DS1307 rtc;
 LiquidCrystal lcd(rs, e, d4, d5, d6, d7);
 
 // Protótipo das funções
-char VarreTeclado();
+void VarreTeclado();
 void MoveEsquerda();
 void MoveDireita();
 void PressOK();
-
+void MovimentaMotores();
+void AbreBandeja();
+void FechaBandeja();
 
 void setup() {
   lcd.begin(16, 2);
@@ -39,10 +41,10 @@ void setup() {
 
   pinMode(CTRL_MOTORS, OUTPUT);
   pinMode(servo_ctrl, OUTPUT);
-  pinMode(column1, OUTPUT);
-  pinMode(column2, OUTPUT);
-  pinMode(column3, OUTPUT);
-
+  
+  pinMode(column1, INPUT);
+  pinMode(column2, INPUT);
+  pinMode(column3, INPUT);
   pinMode(line1, INPUT);
   pinMode(line2, INPUT);
   pinMode(line3, INPUT);
@@ -53,83 +55,74 @@ void loop() {
   DateTime now = rtc.now();
   int hora = now.hour();
   int minutos = now.minute();
-  int segundos = now.second();
- 
+  
+  lcd.setCursor(0,0);
   lcd.print(hora);
   lcd.print(":");
   lcd.print(minutos);
-  lcd.print(":");
-  lcd.print(segundos);
-
   lcd.setCursor(1,1);
   lcd.print("<");
   lcd.setCursor(14,1);
   lcd.print(">");
-
-  char tecla = VarreTeclado();
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print(tecla);
+  
+  //VarreTeclado();
+  MovimentaMotores();
 }
 
-char VarreTeclado(){
-  for(int i = 0; i<3; i++){
-    int column = i;
-  }
+void VarreTeclado(){
+  bool linha1, linha2, linha3, linha4, coluna1, coluna2, coluna3;
 
-  switch(column){
-    case 0:
-      digitalWrite(column1, HIGH);
-      delay(150);
-      linha1 = digitalRead(line1);
-      delay(150);
-      linha2 = digitalRead(line2);
-      delay(150);
-      linha3 = digitalRead(line3);
-      delay(150);
-      linha4 = digitalRead(line4);
-      delay(150);
-    
-      if(linha1) return "1";
-      if(linha2) return "4";
-      if(linha3) return "7";
-      if(linha4) MoveEsquerda();
-      digitalWrite(column1, LOW);
-      
-    case 1:
-      digitalWrite(column2, HIGH);
-      delay(150);
-      linha1 = digitalRead(line1);
-      delay(150);
-      linha2 = digitalRead(line2);
-      delay(150);
-      linha3 = digitalRead(line3);
-      delay(150);
-      linha4 = digitalRead(line4);
-      delay(150);
-    
-      if(linha1) return "2";
-      if(linha2) return "5";
-      if(linha3) return "8";
-      if(linha4) PressOK();
-      digitalWrite(column2, LOW);
-      
-    case 2:
-      digitalWrite(column3, HIGH);
-      delay(150);
-      linha1 = digitalRead(line1);
-      delay(150);
-      linha2 = digitalRead(line2);
-      delay(150);
-      linha3 = digitalRead(line3);
-      delay(150);
-      linha4 = digitalRead(line4);
-      delay(150);
-    
-      if(linha1) return "3";
-      if(linha2) return "6";
-      if(linha3) return "9";
-      if(linha4) MoveDireita();
-      digitalWrite(column3, LOW);
-  }
+  coluna1 = digitalRead(column1);
+  linha1 = digitalRead(line1);
+  delay(50);
+  linha2 = digitalRead(line2);
+  delay(50);
+  linha3 = digitalRead(line3);
+  delay(50);
+  linha4 = digitalRead(line4);
+  delay(50);
+  
+  coluna2 = digitalRead(column2);
+  linha1 = digitalRead(line1);
+  delay(50);
+  linha2 = digitalRead(line2);
+  delay(50);
+  linha3 = digitalRead(line3);
+  delay(50);
+  linha4 = digitalRead(line4);
+  delay(50);
+  
+  coluna3 = digitalRead(column3);
+  linha1 = digitalRead(line1);
+  delay(50);
+  linha2 = digitalRead(line2);
+  delay(50);
+  linha3 = digitalRead(line3);
+  delay(50);
+  linha4 = digitalRead(line4);
+  delay(50);
+}
+
+void AbreBandeja(){
+  digitalWrite(servo_ctrl, HIGH);
+  delay(2);
+  digitalWrite(servo_ctrl, LOW);
+  delay(18);
+}
+
+void FechaBandeja(){
+  digitalWrite(servo_ctrl, HIGH);
+  delay(1.5);
+  digitalWrite(servo_ctrl, LOW);
+  delay(18.5);
+}
+
+void MovimentaMotores(){
+  digitalWrite(CTRL_MOTORS, HIGH);
+  AbreBandeja();
+  delay(4000);
+  digitalWrite(CTRL_MOTORS, LOW);
+  FechaBandeja();
+  delay(2000);
+  digitalWrite(servo_ctrl, LOW);
 }
