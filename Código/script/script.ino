@@ -1,6 +1,8 @@
 #include <LiquidCrystal.h>
 #include "RTClib.h"
 
+#define sensor A3
+
 // Pinout dos Motores
 #define CTRL_MOTORS 0
 #define servo_ctrl  1
@@ -27,13 +29,21 @@ RTC_DS1307 rtc;
 LiquidCrystal lcd(rs, e, d4, d5, d6, d7);
 
 // Protótipo das funções
+void EncheCambuca();
 void VarreTeclado();
-void MoveEsquerda();
-void MoveDireita();
-void PressOK();
-void MovimentaMotores();
 void AbreBandeja();
 void FechaBandeja();
+void MoveEsquerda(); // função para interagir com as opções no lcd
+void MoveDireita(); // função para interagir com as opções no lcd
+void PressOK(); // função para identificar quando se o usuário clicou em ok (segura) ou em 0 (clica e solta)
+
+// variaveis utilizadas para exemplificar
+int dose_programada = 458; // quantidade de comida em gramas
+int hora_alimentacao1 = 7;
+int minutos_alimentacao1 = 30;
+int hora_alimentacao2 = 16;
+int minutos_alimentacao2 = 40;
+int peso_da_cambuca;
 
 void setup() {
   lcd.begin(16, 2);
@@ -42,6 +52,7 @@ void setup() {
   pinMode(CTRL_MOTORS, OUTPUT);
   pinMode(servo_ctrl, OUTPUT);
   
+  pinMode(sensor, INPUT);
   pinMode(column1, INPUT);
   pinMode(column2, INPUT);
   pinMode(column3, INPUT);
@@ -55,8 +66,8 @@ void loop() {
   DateTime now = rtc.now();
   int hora = now.hour();
   int minutos = now.minute();
-  
-  lcd.setCursor(0,0);
+
+  lcd.setCursor(5,0);
   lcd.print(hora);
   lcd.print(":");
   lcd.print(minutos);
@@ -64,9 +75,28 @@ void loop() {
   lcd.print("<");
   lcd.setCursor(14,1);
   lcd.print(">");
-  
-  //VarreTeclado();
-  MovimentaMotores();
+
+  if(hora == (hora_alimentacao1 || hora_alimentacao2)){
+    if(minutos == (minutos_alimentacao1 || minutos_alimentacao2)) EncheCambuca();
+  }
+}
+
+void EncheCambuca(){
+  do{
+    peso_da_cambuca = map(analogRead(sensor), 0, 255, 0, 1000);
+    AbreBandeja();
+    digitalWrite(CTRL_MOTORS, HIGH);
+    lcd.setCursor(5,0);
+    lcd.print("Peso da cambuca:");
+    lcd.setCursor(5,1);
+    lcd.print(peso_da_cambuca);
+  }while(peso_da_cambuca < dose_programada);
+  if(peso_da_cambuca > dose_programada){
+    delay(50);
+    FechaBandeja();
+    digitalWrite(CTRL_MOTORS, LOW);
+    lcd.clear();
+  }
 }
 
 void VarreTeclado(){
@@ -115,14 +145,4 @@ void FechaBandeja(){
   delay(1.5);
   digitalWrite(servo_ctrl, LOW);
   delay(18.5);
-}
-
-void MovimentaMotores(){
-  digitalWrite(CTRL_MOTORS, HIGH);
-  AbreBandeja();
-  delay(4000);
-  digitalWrite(CTRL_MOTORS, LOW);
-  FechaBandeja();
-  delay(2000);
-  digitalWrite(servo_ctrl, LOW);
 }
