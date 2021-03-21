@@ -38,12 +38,13 @@ void MoveDireita(); // função para interagir com as opções no lcd
 void PressOK(); // função para identificar quando se o usuário clicou em ok (segura) ou em 0 (clica e solta)
 
 // variaveis utilizadas para exemplificar
-int dose_programada = 458; // quantidade de comida em gramas
-int hora_alimentacao1 = 7;
-int minutos_alimentacao1 = 30;
-int hora_alimentacao2 = 17;
-int minutos_alimentacao2 = 0;
+int dose_programada = 500; // quantidade de comida em gramas
+int hora_alimentacao1 = 18;
+int minutos_alimentacao1 = 14;
+int hora_alimentacao2 = 18;
+int minutos_alimentacao2 = 15;
 int peso_da_cambuca;
+int contador_ctrl = 0;
 
 void setup() {
   lcd.begin(16, 2);
@@ -76,31 +77,44 @@ void loop() {
   lcd.setCursor(14,1);
   lcd.print(">");
 
-  if(hora == (hora_alimentacao1 || hora_alimentacao2)){
-    if(minutos == (minutos_alimentacao1 || minutos_alimentacao2)) EncheCambuca();
+  if(hora == hora_alimentacao1 || hora == hora_alimentacao2){
+    if(minutos == minutos_alimentacao1 || minutos == minutos_alimentacao2) EncheCambuca();
   }
-
-  
+  contador_ctrl = 0; 
 }
 
 void EncheCambuca(){
-  do{
+  peso_da_cambuca = map(analogRead(sensor), 0, 255, 0, 1000);
+  while(peso_da_cambuca< dose_programada){
     peso_da_cambuca = map(analogRead(sensor), 0, 255, 0, 1000);
     AbreBandeja();
     digitalWrite(CTRL_MOTORS, HIGH);
-    lcd.setCursor(5,0);
+    lcd.setCursor(0,0);
     lcd.print("Peso da cambuca:");
     lcd.setCursor(5,1);
     lcd.print(peso_da_cambuca);
-  }while(peso_da_cambuca < dose_programada);
-  if(peso_da_cambuca > dose_programada){
-    delay(50);
-    FechaBandeja();
-    digitalWrite(CTRL_MOTORS, LOW);
-    lcd.clear();
   }
+  delay(50);
+  FechaBandeja();
+  digitalWrite(CTRL_MOTORS, LOW);
+  lcd.clear();
 }
 
+void AbreBandeja(){
+  digitalWrite(servo_ctrl, HIGH);
+  delay(2);
+  digitalWrite(servo_ctrl, LOW);
+  delay(18);
+}
+
+void FechaBandeja(){
+  digitalWrite(servo_ctrl, HIGH);
+  delay(1);
+  digitalWrite(servo_ctrl, LOW);
+  delay(19);
+}
+
+/*
 void VarreTeclado(){
   bool linha1, linha2, linha3, linha4, coluna1, coluna2, coluna3;
 
@@ -134,17 +148,4 @@ void VarreTeclado(){
   linha4 = digitalRead(line4);
   delay(50);
 }
-
-void AbreBandeja(){
-  digitalWrite(servo_ctrl, HIGH);
-  delay(2);
-  digitalWrite(servo_ctrl, LOW);
-  delay(18);
-}
-
-void FechaBandeja(){
-  digitalWrite(servo_ctrl, HIGH);
-  delay(1);
-  digitalWrite(servo_ctrl, LOW);
-  delay(19);
-}
+*/
