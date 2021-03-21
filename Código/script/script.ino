@@ -41,8 +41,8 @@ void PressOK(); // função para identificar quando se o usuário clicou em ok (
 int dose_programada = 458; // quantidade de comida em gramas
 int hora_alimentacao1 = 7;
 int minutos_alimentacao1 = 30;
-int hora_alimentacao2 = 16;
-int minutos_alimentacao2 = 40;
+int hora_alimentacao2 = 17;
+int minutos_alimentacao2 = 0;
 int peso_da_cambuca;
 
 void setup() {
@@ -79,6 +79,8 @@ void loop() {
   if(hora == (hora_alimentacao1 || hora_alimentacao2)){
     if(minutos == (minutos_alimentacao1 || minutos_alimentacao2)) EncheCambuca();
   }
+
+  
 }
 
 void EncheCambuca(){
@@ -142,7 +144,7 @@ void AbreBandeja(){
 
 void FechaBandeja(){
   digitalWrite(servo_ctrl, HIGH);
-  delay(1.5);
+  delay(1);
   digitalWrite(servo_ctrl, LOW);
-  delay(18.5);
+  delay(19);
 }
