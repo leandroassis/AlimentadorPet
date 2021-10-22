@@ -1,0 +1,16 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Pet Feeder Hardware Schema"
+Date "2021-03-21"
+Rev "v3"
+Comp "UFRJ - Universidade Federal do Rio de Janeiro"
+Comment1 "Made by: Leandro Assis dos Santos"
+Comment2 "Rio de Janeiro, RJ - Brazil"
+Comment3 ""
+Comment4 ""
+$EndDescr
+$EndSCHEMATC
