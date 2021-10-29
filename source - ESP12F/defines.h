@@ -24,12 +24,13 @@ typedef unsigned char byte;
 #define STB           0x01 // Start transmission byte
 #define ETB           0x17 // End transmission byte
 #define ERR           0x07 // Error byte
-#define ADD           0x1A // Start Feed Configuration byte
-#define REM           
-#define CLR           
-#define GET
-#define INB           0x1E             
-#define ENB           0x1F
+#define INB           0x1E // Start of data in memory       
+#define ENB           0x1F // End of data in memory
+
+#define ADD           0x1A 
+#define REM           0x11
+#define CLR           0x12
+#define GET           0x13
 
 // Hardware Pinout Definements
 
@@ -55,7 +56,6 @@ byte incoming_data;
 
 // Functions Declaration
 void AddFeedConfigs(); // Add some feed parameters
-void EditFeedConfigs(); // Edit some feed parameters
 void RemoveFeedConfigs();
 
 void OrganizeEEPROM();
@@ -69,4 +69,5 @@ void WriteEEPROM(unsigned int memory_address, byte data); // Write a data into e
 byte ReadEEPROM(unsigned int memory_address); // Read a data into eeprom
 void SpinAxis(unsigned short int desired_amount);
 void EraseMemory();
+void GetMemoryData(unsgined char hour, unsigned char minutes);
 

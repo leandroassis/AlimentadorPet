@@ -81,17 +81,20 @@ void loop() {
 
       switch (incoming_data)
       {
-      case ADD:
-        break;
-      case REM:
-        break;
-      case GET:
-        break;
-      case CLR:
-        EraseMemory();
-        break;
-      default:
-        break;
+        case ADD:
+          AddFeedConfigs();
+          break;
+        case REM:
+          RemoveFeedConfigs()
+          break;
+        case GET:
+          GetMemoryData(hour, minutes);
+          break;
+        case CLR:
+          EraseMemory();
+          break;
+        default:
+          break;
       }
 
     }while(incoming_data != ETB);

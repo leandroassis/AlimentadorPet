@@ -12,8 +12,49 @@
 
 #include "defines.h"
 
+void GetMemoryData(unsigned char hour, unsigned char minutes){
+  Serial.print(STB);
+  Serial.print(hour); // Send actual time
+  Serial.print(minutes);
+  for(fast i = START_BANK_ADDRESS; i < END_BANK_ADDRESS; i+6){
+    if(i == NULL) break;
+    for(fast j = 1; j <= 5; j++){
+      Serial.print(ReadEEPROM(i+j));
+    }
+  }
+  Serial.print(ETB);
+}
+
+void RemoveFeedConfigs(){
+  byte response, address = 0, aux = 1;
+
+  do{
+    response = Serial.read();
+
+    if((response == CAN) || (response == ERR)) break;
+    if(response != STB){ // Means it is receiving data byte
+      if(address == 0){
+        address = BinarySearch(response);
+        if(address == NULL) break;
+        continue;
+      }
+      if(ReadEEPROM(address+aux) != response) break;
+      else aux++;
+    }
+  }while(response != ETB);
+
+  if(aux == 4){
+    for(fast i = address-1; i <= address+4; i++) WriteEEPROM(i, NULL);
+    Serial.print(DONE);
+  }
+  else{
+    Serial.print(ERR);
+  }
+}
+
 void EraseMemory(){
   for(fast i = START_BANK_ADDRESS; i < END_BANK_ADDRESS; i++) WriteEEPROM(i, 0xFF);
+  Serial.print(DONE);
 }
 
 unsigned short int FoodTime(unsigned char hour, unsigned char minutes){
@@ -38,6 +79,8 @@ byte BinarySearch(unsigned char item){
 
   while(init <= end){
     address = (init+end)/2;
+    address += address-2%6;
+
     if(ReadEEPROM(address) == item) return address;
     if(ReadEEPROM(address) < item){
       init = address;
@@ -64,8 +107,23 @@ void AddFeedConfigs(){
   byte empty_address = 0x00;
 
   if(ReadEEPROM(0x00) == NULL) WriteEEPROM(0x00, 0x01);
-  
-  Serial.print(FCF);
+
+  for(fast i = START_BANK_ADDRESS; i < END_BANK_ADDRESS; i+6){
+    // Read the EEPROM to find the first empty address
+    if(ReadEEPROM(i) == NULL){ // When find it, write the start data byte and save the next address in empty_adress variable
+      empty_address = i;
+      WriteEEPROM(empty_address, INB);
+      empty_address++;
+      break;
+    }
+  }
+  if(!empty_address){ // If the bank is full send a cancel bit
+    Serial.print(CAN);
+    response = CAN;
+  }
+  else{
+    Serial.print(DONE);
+  }
 
   do{
     response = Serial.read(); // Read the incoming byte
@@ -86,31 +144,19 @@ void AddFeedConfigs(){
     else{ // Means it received an STB or input data byte
       if(response != STB){ // If it really received an input data byte
         if(response == ETB) WriteEEPROM(empty_address, ENB); // If received an ETB byte write the end data byte before close the loop
-        else{
+        else{ // If received an normal input data byte write it 
           WriteEEPROM(empty_address, response);
           empty_address++;
         }
       }
-      else{
-        for(fast i = START_BANK_ADDRESS; i < END_BANK_ADDRESS; i+6){
-          // Read the EEPROM to find the first empty address
-          if(ReadEEPROM(i) == NULL){ // When find it, write the start data byte and save the next address in empty_adress variable
-            empty_address = i;
-            WriteEEPROM(empty_address, INB);
-            empty_address++;
-            break;
-          }
-        }
-        if(!empty_address){ // If the bank is full send a cancel bit
-          Serial.print(CAN);
-        }
-      }
     }
-
+    if(empty_address > END_BANK_ADDRESS){
+      Serial.print(ERR);
+      break;
+    }
   } while(response != ETB);  
 
   OrganizeEEPROM();
-
 }
 
 void QuickSort(byte left_limit, byte right_limit, byte bias){
