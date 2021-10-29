@@ -27,6 +27,7 @@ typedef unsigned char byte;
 #define ADD           0x1A // Start Feed Configuration byte
 #define REM           
 #define CLR           
+#define GET
 #define INB           0x1E             
 #define ENB           0x1F
 

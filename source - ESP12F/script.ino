@@ -85,6 +85,8 @@ void loop() {
         break;
       case REM:
         break;
+      case GET:
+        break;
       case CLR:
         EraseMemory();
         break;
