@@ -11,43 +11,61 @@
 */
 
 // Variable types definition
-typedef struct
-{
-    unsigned short int hours = 0;
-    unsigned short int minutes = 0;
-    unsigned short int seconds = 0;
-    unsigned int amount = 500;
-} FeedConfigs;
+typedef volatile register fast;
+typedef unsigned char byte;
 
+// Labels and Control bytes Definements
+
+#define NULL          0xFF // NUll byte
+#define STX           0x02 // Start of text byte
+#define ETX           0x03 // End of text byte
+#define DONE          0X04 // Done byte
+#define CAN           0x18 // Cancel byte
+#define STB           0x01 // Start transmission byte
+#define ETB           0x17 // End transmission byte
+#define ERR           0x07 // Error byte
+#define ADD           0x1A // Start Feed Configuration byte
+#define REM           
+#define CLR           
+#define INB           0x1E             
+#define ENB           0x1F
 
 // Hardware Pinout Definements
 
 #define BALANCE       A0
 #define AXIS_MOTORS   D0
-#define SERVO_MOTORS  D8
+#define SERVO_MOTORS  D7
 #define SCL           D1
 #define SDA           D2
-#define RX_LCD        D5
-#define CLK_LCD       D6
-#define TX_LCD        D7
 
-// LCD and Keyboard Driver Comunication
+// Peripherical Memory Organization
 
-#define BITRATE       1000 // Comunication frequency in bits/s
+#define EEPROM_ADDRESS              0x50 // EEPROM I2C Bus Address
+#define BOOT_CHECK_MEMORY_ADDRESS   0x00 // Check boot byte address
+#define START_BANK_ADDRESS          0x01 // Begin of feed configurations variables bank
+#define END_BANK_ADDRESS            0x7F // End of feed configurations variables bank 
 
-// Peripherical Device Address
-
-#define EEPROM_ADDRESS 0x50
-
-// Variables 
-
-int bowl_weight;
-byte driverBytes[];
-FeedConfigs *food;
+// Code Utils 
+#define MAX_WEIGHT    1000
+#define MIN_WEIGHT    0
+unsigned char hour;
+unsigned char minutes;
+byte incoming_data;
 
 // Functions Declaration
-unsigned short int LCDPrint(char *message); // Send some string to the LCD Driver
-byte GetDriverData();
-void AdjustFeedConfigs(FeedConfigs *array); // Edit some feed parameters
+void AddFeedConfigs(); // Add some feed parameters
+void EditFeedConfigs(); // Edit some feed parameters
+void RemoveFeedConfigs();
+
+void OrganizeEEPROM();
+void QuickSort(byte left_limit, byte right_limit, byte bias);
+
+unsigned short int FoodTime(unsigned char hour, unsigned char minutes);
+byte BinarySearch(unsigned char item);
+
+void LCDPrint(char *message);
 void WriteEEPROM(unsigned int memory_address, byte data); // Write a data into eeprom
 byte ReadEEPROM(unsigned int memory_address); // Read a data into eeprom
+void SpinAxis(unsigned short int desired_amount);
+void EraseMemory();
+

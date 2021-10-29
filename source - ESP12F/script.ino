@@ -13,49 +13,85 @@
       These features can be developed someday. 
 */
 
+#include "defines.h"
+#include "utils.h"
 #include <LiquidCrystal.h>
 #include <Wire.h>
 #include "RTClib.h"
-#include "defines.h"
-#include "utils.h"
+#include <Servo.h>
 
-// RTC class inicialization
+
+// RTC and Servo class inicialization
 RTC_DS1307 rtc;
+Servo servo1;
 
 void setup() {
-  Wire.begin();
+  Serial.begin(9600);
+
+  if(!Wire.begin(SDA, SCL)){
+    LCDPrint("I2C bus inicialization error. Restarting...");
+    Serial.print(STB);
+    Serial.print(ERR);
+    Serial.print(ETB);
+
+    restart();
+  }
 
   if(!rtc.begin()){
-    LCDPrint("Couldn't find RTC module.")
-    LCDPrint("Take your device into maintenance.")
-    abort()
+    LCDPrint("Couldn't find RTC module.\nTake your device into maintenance.");
+
+    Serial.print(STB);
+    Serial.print(ERR);
+    Serial.print(ETB);
+    abort();
   }
 
   pinMode(BALANCE, INPUT);
   pinMode(AXIS_MOTORS, OUTPUT);
   pinMode(SERVO_MOTORS, OUTPUT);
-  pinMode(RX_LCD, INPUT);
-  pinMode(CLK_LCD, INPUT);
-  pinMode(TX_LCD, OUTPUT);
+  digitalWrite(AXIS_MOTORS, LOW);
+  servo1.attach(SERVO_MOTORS);
+  servo1.write(90);
+  servo1.detach();
 
-  if(!rtc.isrunning()) rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  
-  if(!GetDriverData(0x0)){
-    LCDPrint("First boot. Please insert the desired feed configurations.");
-    delay(3000);
-    AdjustFeedConfigs(food);
+  if(!rtc.isrunning()) rtc.adjust(DateTime(F(__DATE__), F(__TIME__));
+
+  if(ReadEEPROM(0x00) == NULL){ // read the first memory byte
+    AddFeedConfigs(food);
   }
+
+  Serial.print(STB);
+  Serial.print(DONE);
+  Serial.print(ETB);
 }
 
 void loop() {
   DateTime now = rtc.now();
-  int hour = now.hour();
-  int minutes = now.minute();
-  int seconds = now.seconds();
+  hour = now.hour();
+  minutes = now.minute();
 
-  
+  amount = FoodTime(hour, minutes);
+  if(amount){
+    SpinAxis(amount);
+  }
 
-  if(hora == hora_alimentacao1 || hora == hora_alimentacao2){
-    if(minutos == minutos_alimentacao1 || minutos == minutos_alimentacao2) EncheCambuca();
+  if(Serial.read() == STB){
+    do{
+      incoming_data = Serial.read();
+
+      switch (incoming_data)
+      {
+      case ADD:
+        break;
+      case REM:
+        break;
+      case CLR:
+        EraseMemory();
+        break;
+      default:
+        break;
+      }
+
+    }while(incoming_data != ETB);
   }
 }
