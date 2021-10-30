@@ -11,7 +11,7 @@
 */
 
 // Variable types definition
-typedef volatile register fast;
+typedef register fast;
 typedef unsigned char byte;
 
 // Labels and Control bytes Definements

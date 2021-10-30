@@ -126,6 +126,7 @@ fixsign32
 fsr
 fsrptr
 get_fosc_khz
+getincomingtext
 gie
 gie_bit
 go
@@ -149,6 +150,7 @@ irp
 irp_bit
 longint2double
 longword2double
+main
 mul_16x16_s
 mul_16x16_u
 mul_32x32_fp

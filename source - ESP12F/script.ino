@@ -27,21 +27,19 @@ Servo servo1;
 
 void setup() {
   Serial.begin(9600);
+  Serial.print(STB);
 
   if(!Wire.begin(SDA, SCL)){
-    LCDPrint("I2C bus inicialization error. Restarting...");
-    Serial.print(STB);
     Serial.print(ERR);
+    LCDPrint("I2C bus inicialization error.\nPlease restart.");
     Serial.print(ETB);
-
-    restart();
   }
 
   if(!rtc.begin()){
+    Serial.print(ERR);
+
     LCDPrint("Couldn't find RTC module.\nTake your device into maintenance.");
 
-    Serial.print(STB);
-    Serial.print(ERR);
     Serial.print(ETB);
     abort();
   }
@@ -57,10 +55,10 @@ void setup() {
   if(!rtc.isrunning()) rtc.adjust(DateTime(F(__DATE__), F(__TIME__));
 
   if(ReadEEPROM(0x00) == NULL){ // read the first memory byte
-    AddFeedConfigs(food);
+    Serial.print(ADD);
+    AddFeedConfigs();
   }
 
-  Serial.print(STB);
   Serial.print(DONE);
   Serial.print(ETB);
 }
