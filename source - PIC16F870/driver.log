@@ -1,21 +1,14 @@
-0	1	mikroCPIC1618.exe -MSF -DBG -pP16F870 -DL -O11111114 -fo20 -N"D:\Projetos\Alimentador-Pet\source - PIC16F870\driver.mcppi" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" -SP"D:\Projetos\Alimentador-Pet\source - PIC16F870\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" "main.c" "utils.c" "__Lib_Math.mcl" "__Lib_MathDouble.mcl" "__Lib_System.mcl" "__Lib_Delays.mcl"	 
+0	1	mikroCPIC1618.exe -MSF -DBG -pP16F870 -DL -O11111114 -fo20 -N"D:\Projetos\Alimentador-Pet\source - PIC16F870\driver.mcppi" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Defs\" -SP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" -SP"D:\Projetos\Alimentador-Pet\source - PIC16F870\" -IP"C:\Users\Public\Documents\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" "main.c" "utils.c" "__Lib_Math.mcl" "__Lib_MathDouble.mcl" "__Lib_System.mcl" "__Lib_Delays.mcl" "__Lib_CString.mcl" "__Lib_UART_c67.mcl" "__Lib_LcdConsts.mcl" "__Lib_Lcd.mcl"	 
 hint: 0	1139	Available RAM: 112 [bytes], Available ROM: 2048 [bytes]	 
-diagnostics: 0	122	Compilation Started	string.h
-error: 35	324	Undeclared identifier 'Lcd_Init' in expression	main.c
-error: 36	324	Undeclared identifier 'Lcd_Cmd' in expression	main.c
-warning: 37	1509	Generated baud rate is 9615 bps (error = 0.16 percent)	main.c
-error: 37	312	Internal error 'UART1_Init not found'	main.c
-error: 40	324	Undeclared identifier 'Lcd_Cmd' in expression	main.c
-error: 41	324	Undeclared identifier 'Lcd_Out' in expression	main.c
-error: 41	402	; expected, but ')' found	main.c
-error: 41	424	'}' expected ';' found	main.c
-error: 47	371	Specifier needed	main.c
-error: 47	396	Invalid declarator expected'(' or identifier	main.c
-error: 48	300	Syntax Error: ')' expected,  but '==' found	main.c
-error: 50	371	Specifier needed	main.c
-error: 50	396	Invalid declarator expected'(' or identifier	main.c
-error: 51	300	Syntax Error: ')' expected,  but '!=' found	main.c
-error: 51	312	Internal error ''	main.c
 diagnostics: 0	122	Compilation Started	defines.h
-diagnostics: 12	123	Compiled Successfully	utils.c
-error: 0	102	Finished (with errors): 29 out 2021, 20:15:47	driver.mcppi
+warning: 43	1509	Generated baud rate is 9615 bps (error = 0.16 percent)	main.c
+diagnostics: 61	123	Compiled Successfully	main.c
+diagnostics: 0	122	Compilation Started	defines.h
+warning: 27	1508	Implicit conversion of int to ptr	utils.c
+warning: 112	1508	Implicit conversion of int to ptr	utils.c
+warning: 112	1508	Implicit conversion of int to ptr	utils.c
+warning: 134	1508	Implicit conversion of int to ptr	utils.c
+error: 141	384	Illegal pointer conversion	utils.c
+error: 141	384	Illegal pointer conversion	utils.c
+warning: 148	1503	Result is not defined in function: 'VerifyTime'	utils.c
+error: 0	102	Finished (with errors): 02 nov 2021, 13:16:13	driver.mcppi

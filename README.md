@@ -3,6 +3,8 @@
 ## Date: 21/03/21
 ### Based on: ["Faça um alimentador automático para cachorros #ManualMaker Aula 12, Vídeo 2"](https://www.youtube.com/watch?v=TdMz7EMKBdY&t=637s)
 
+#### Note: Unfinished yet :p
+
 # Introduction
 
 This repository contains only the hardware development files. The server and app files are the property of my contributor Karoline.
@@ -17,9 +19,3 @@ The user can program the desired time and amount of food of each dump directly o
 Data as time, the weight of remaining food before dump, and some possible error during the dump, is sent to the pet's owner through the app.
 
 The dump process consists of spinning two motors tied in a screw thread, moving the food into a pipe until a gate above the feeding bowl. The motors keep spinning until the programmed amount of food is dumped.
-
-# Hardware's Features
-
-# PCB Design
-
-# Building Instructions

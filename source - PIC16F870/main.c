@@ -4,7 +4,6 @@
   Description: Main source file of PIC16F870 routine
 */
 
-#include <string.h>
 #include "defines.h"
 
 sbit LCD_RS at RS;
@@ -26,10 +25,17 @@ byte incoming_data;
 
 void main() {
      // Set some register
-     TRISA = 0x00;                                      // Set port A as output
+     GIE_bit = 0x01;
+     PEIE_bit = 0x00;
+     INTE_bit = 0x01;
+     INTEDG_bit = 0x01;
+     
      TRISB = 0xFF;                                      // Set port B as input
      TRISC = 0x81;
-
+     
+     PORTA = 0x00;
+     PORTC = 0x00;
+     
      ADCON1 = 0x06;                                     // Set the analog pins as digital
      
      Lcd_Init();                                        // Initialize LCD
@@ -41,15 +47,15 @@ void main() {
      Lcd_Out(1, (16-strlen("Powering up..."))/2, "Powering up...");
      do{
         if(UART1_Data_Ready()) incoming_data = UART1_Read(); // Read the incoming data
-        if(incoming_data == ERR){
+        if(incoming_data == 0x07){
              GetIncomingText();
              while(1){}
         }
-        else if(incoming_data == ADD){
+        else if(incoming_data == 0x1A){
              AddFeedInfo();
         }
-     } while(incoming_data != ETB);
-     UpdateInfos();
+     } while(incoming_data != 0x17);
+//     UpdateInfos();
      Lcd_Cmd(_LCD_CLEAR);
      Lcd_Out(1, (16-strlen("Auto Pet Feeder"))/2, "Auto PetFeeder"); // Write centralized message
 }
